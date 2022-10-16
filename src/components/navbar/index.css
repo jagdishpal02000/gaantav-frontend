@@ -1,0 +1,13 @@
+nav{
+    position: fixed !important;
+  top: 0 !important;
+  width: 100%;
+}
+
+nav > div >a{
+color:white !important
+}
+
+.wt{
+    color:white !important;
+}

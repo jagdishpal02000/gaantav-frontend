@@ -1,0 +1,55 @@
+.card-img{
+    margin: auto;
+    max-width: 70%;
+    height: 50%;
+}
+
+.autherImg{
+width: 45px;
+border-radius: 40%;
+}
+
+.card-points {
+    list-style: none;
+}
+
+.downVotes{
+color:rgb(240, 119, 119);
+}
+.downVotes:hover{
+transform: scale(0.9);
+color:rgb(254, 11, 11);
+
+}
+
+.upVotes{
+    color:rgb(74, 250, 74);
+}
+
+.upVotes:hover{
+    color:green;
+    transform: scale(1.2);
+}
+
+.answers{
+    padding:10px;
+    display: block;
+}
+
+.ans-profile{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.card-title{
+    text-transform: capitalize;
+    text-decoration: none;
+    color: black;
+}
+
+.card-title:hover{
+    transform: scale(1.005);
+    text-decoration: none !important;   
+}
