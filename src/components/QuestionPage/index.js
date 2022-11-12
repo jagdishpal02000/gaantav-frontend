@@ -1,34 +1,29 @@
 import {useParams} from 'react-router-dom';
+import { useEffect,useState } from 'react';
 import Navbar from '../navbar';
 import Card from '../Card';
+import axios from 'axios';
+
+const apiURL ="http://localhost:5000/public/api/v1/";
+
 const QuestionPage = () =>{
     const {questionName} = useParams();
+    const [questionData,setQuestionData] = useState();
+    const [loading,setLoading] = useState(true);
+    const [notFound,setNotFound] = useState(false);
     // get all question data with question title.
     // and send that data to card and show all answers.
-
-    const exmapleData = [{   id:1,
-        title:"write hello world program",
-        summery:'this is the summery of the questoin',
-        image:'https://qph.cf2.quoracdn.net/main-qimg-c603062c2b793c249ca93c158ac3951a-lq',
-        authorImage:'https://qph.cf2.quoracdn.net/main-qimg-c603062c2b793c249ca93c158ac3951a-lq',
-        authorName:'Jagdish Pal',
-        tags:'cpp,reactjs,nodejs',
-        upVotes:5,
-        downVotes:2,
-        authorUsername:'jagdishpal02000',
-    },
-    {
-        id:2,
-        title:"best programming language",
-        summery:'this is the summery of the questoin',
-        image:'https://qph.cf2.quoracdn.net/main-qimg-96b671933616ac30af8f0818835abefd-lq',
-        authorImage:'https://qph.cf2.quoracdn.net/main-qimg-96b671933616ac30af8f0818835abefd-lq',
-        authorName:'Jagdish Pal',
-        tags:'cpp,reactjs,nodejs',
-        upVotes:3,
-        downVotes:0,
-        authorUsername:'jagdishpal02001',
-    }];
+    useEffect( () => {
+     
+   const questionTitle = questionName.split('-').join('');
+   axios.get(apiURL+'question/'+questionTitle).then((response) =>{
+       setQuestionData(response.data[0]);
+       setLoading(false);
+     }).catch(error => {
+    setNotFound(true);
+    setLoading(false);
+    });
+   }, [questionName]);  
     return (
         <>
         <Navbar/>
@@ -38,8 +33,8 @@ const QuestionPage = () =>{
                 
             </div>
             <div className='col-md-6 mt-4'>
-
-        <Card {...exmapleData[0]}/>
+           
+            {loading ? <h1>Loading....</h1> : (notFound ? <h1>Sorry question not found 😔 </h1> : <Card {...questionData}/>) }
             </div>
             <div className='col-md-3'>
 

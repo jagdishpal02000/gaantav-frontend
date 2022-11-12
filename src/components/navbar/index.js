@@ -28,33 +28,33 @@ const Navbar = () =>{
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ms-auto mb-4 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link active wt m-2" aria-current="page" href="#">Home</a>
+              <a className="nav-link active wt m-2 link" aria-current="page" href="#">Home</a>
             </li>
              {
                isLogin ? 
             <li className="nav-item">
-              <a className="nav-link wt m-2" >
+              <a className="nav-link wt m-2 link" >
                 Profile
               </a>
             </li>
               :<>
             <li className="nav-item">
-               <a className="nav-link wt m-2" onClick={()=>{setShowLogin(!showLogin)}}>
+               <a className="nav-link wt m-2 link" onClick={()=>{setShowLogin(!showLogin)}}>
                 Login
               </a>
               {showLogin && <Login/>}
               </li>
             <li className="nav-item">
-              <a className="nav-link wt m-2" onClick={()=>{setShowSignup(!showSignup)}}>
+              <a className="nav-link wt m-2 link" onClick={()=>{setShowSignup(!showSignup)}}>
                 Signup
               </a>
               {showSignup && <Signup/>}
               </li>
-              </>
+              </> 
               }
 
             <li>
-              <a className="nav-link wt m-2" onClick={()=>{setShowAskQuestion(!showAskQuestion)}}>Ask A Question</a>
+              <a className="nav-link wt m-2 link" onClick={()=>{isLogin ? setShowAskQuestion(!showAskQuestion) : setShowLogin(!showLogin)}}>Ask A Question</a>
               {showAskQuestion && <AskQuestion/>}
             </li>
             {
@@ -62,7 +62,6 @@ const Navbar = () =>{
               && 
             <li>
               <a className="nav-link wt m-2" onClick={Logout}>Logout</a>
-              {showAskQuestion && <AskQuestion/>}
             </li>
 
             }

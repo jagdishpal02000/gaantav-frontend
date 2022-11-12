@@ -1,21 +1,39 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import {useSelector,useDispatch} from 'react-redux';
+import axios from 'axios';
 
-const AnswerQuestion = ({ title, id }) => {
+
+const AnswerQuestion = ({ title, questionId }) => {
+  const {isLogin,token} = useSelector((state)=>state);
   const [show, setShow] = useState(true);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [answerData, setAnswerData] = useState({
-    answer: "",
+    answerBody: "",
   });
 
+  const apiURL= 'http://localhost:5000/api/v1/';
   const handleSubmit = () => {
     // Make API Call to send the data.
-    if (answerData.answer) {
+    if (answerData.answerBody) {
       console.log(answerData);
-      setShow(false);
-    } else {
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+      const formData = {
+        questionId,
+        answerBody:answerData.answerBody,
+      };
+       try {
+        axios.post(apiURL+'answer',formData,config);
+        setShow(false); 
+      } catch (error) {
+        console.warn(error);
+      }
+
+      } else {
       console.warn("error");
     }
   };
@@ -40,10 +58,10 @@ const AnswerQuestion = ({ title, id }) => {
               rows="5"
               className="form-control"
               placeholder="Describe The Answer"
-              value={answerData.summery}
+              value={answerData.answerBody}
               onInput={(e) => {
                 setAnswerData((prev) => {
-                  return { ...prev, answer: e.target.value };
+                  return { ...prev, answerBody: e.target.value };
                 });
               }}
             ></textarea>

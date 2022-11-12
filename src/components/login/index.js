@@ -5,7 +5,7 @@ import axios from 'axios';
 import {useSelector,useDispatch} from 'react-redux';
 import {actions} from '../../store';
 
-const apiURL= 'http://localhost:5000/api/v1/';
+const apiURL= 'http://localhost:5000/auth/';
 
 
 const Login = () => {
@@ -17,7 +17,7 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const loginAction = (token) => {
-    dispatch(actions.Login(token));
+    dispatch(actions.Login({token}));
   };
   const handleSubmit = async () => {
     // Make API Call to send the data.;

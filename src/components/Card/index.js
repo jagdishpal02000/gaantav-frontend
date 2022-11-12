@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import {Link} from 'react-router-dom';
+import axios from "axios";
 import "./index.css";
+import {useSelector,useDispatch} from 'react-redux';
 import AnswerQuestion from "../AnswerQuestion";
 const Card = ({
-  id,
+  questionId,
   title,
   summery,
   image,
@@ -13,33 +15,47 @@ const Card = ({
   upVotes,
   downVotes,
   authorUsername,
+  innerRef,
 }) => {
   const [showAnswerQuestion, setShowAnswerQuestion] = useState(false);
-  const downVote = () =>{
-    console.log('down'+id);
-}
-const upVote = () =>{
-    console.log('up'+id);
+  const [answers,setAnswers] = useState([]);
+  const {isLogin,token} = useSelector((state)=>state);
+  const [upVotesCount,setUpVotesCount] = useState(upVotes);
+  const [downVotesCount,setDownVotesCount] = useState(downVotes);
+  const apiURL='http://localhost:5000/public/api/v1/';
+  const privateApiURL='http://localhost:5000/api/v1/';
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  };
+
+  const downVote = async() =>{
+    axios.post(`${privateApiURL}downVote`,{questionId},config).then((res)=>{
+        if(res.status === 200){
+          // increment down value and decrease up value   
+
+          setUpVotesCount(res.data.upVote);
+          setDownVotesCount(res.data.downVote);
+        }
+      });
+    }
+    const upVote = async () =>{
+      axios.post(`${privateApiURL}upVote`,{questionId},config).then((res)=>{
+        if(res.status === 200){
+          // increment up value.      
+          setUpVotesCount(res.data.upVote);
+          setDownVotesCount(res.data.downVote);
+            }
+        });
   }
   const parsedTitle=title.split(' ').join('-');
   // useEffect to get 2 recent or most upvotes answer.
-  const answers = [
-    {
-        id:1,
-        username:'raja babu',
-        userImg:'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=20&h=30&dpr=2',
-        answer:'hii this is my first answer',
-    },
-    {
-        id:2,
-        username:'ram',
-        userImg:'',
-        answer:'hii this is my second answer',
-    },
-  ]
-
+ useEffect(() => {
+  axios.get(`${apiURL}answers/${questionId}`).then((res)=>{
+    setAnswers(res.data);
+    });
+    }, []);
   return (
-    <div className="card mt-3" style={{ width: "100%" }}>
+    <div className="card mt-3" ref={innerRef} style={{ width: "100%" }}>
       <Link to={`/profile/${authorUsername}`} target="_blank">
       <div className="row">
         {authorImage && (
@@ -50,6 +66,7 @@ const upVote = () =>{
           />
         )}
         <p className="authorName col-2">{authorName}</p>
+       
       </div>
       </Link>
       <hr />
@@ -72,9 +89,8 @@ const upVote = () =>{
         >
           Give A Solution
         </li>
-        {showAnswerQuestion && <AnswerQuestion title={title} id={id} />}
+        {showAnswerQuestion && <AnswerQuestion title={title} questionId={questionId} />}
         <li className="col">
-          {upVotes}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -87,8 +103,8 @@ const upVote = () =>{
             <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
           </svg>
         </li>
+          <li className="col">5</li>
         <li className="col">
-          {downVotes}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -105,11 +121,11 @@ const upVote = () =>{
 
           {answers.map((ans)=>{
                 return (
-                    <div className="answers" key={ans.id}>
+                    <div className="answers" key={ans.answerId}>
                         <img src={ans.userImg} className="ans-profile" alt=""/>
                         <span>{ans.username}</span>
                         <p>
-                        {ans.answer}
+                        {ans.answerBody}
                         </p>
                     </div>
                 );

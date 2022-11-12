@@ -1,26 +1,39 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useState,useRef,useCallback} from 'react';
 import axios from 'axios';
 import './index.css';
 import Card from '../Card';
 import Loading from '../Loading';
-
+import useFetch from '../../hooks/useFetch';
 
 const MainBar = () =>{
 
-const apiURL='http://localhost:5000/api/v1/';
 const [allPosts,setAllPosts] = useState([]);
-const [loading,setLoading] = useState(true);
+const [pageNumber,setPageNumber] = useState(1);
+const {loading,error,list,hasMore}= useFetch(pageNumber);
 
-useEffect(() => {
-    axios.get(apiURL+'posts').then((res)=>{
-        setLoading(false);
-        setAllPosts(res.data);
+const observer = useRef();
+const lastPostElementRef = useCallback(node=>{
+    if(loading) return;
+    //disconnecting the observer from previous last post.
+    if(observer.current !== undefined) 
+        observer.current.disconnect();    
+    observer.current = new IntersectionObserver(entries => {
+    if(entries[0].isIntersecting && hasMore){
+        setPageNumber(prev=>prev+1);
+    }
     });
-}, []);
+    if(node) observer.current.observe(node);    
+},[loading,hasMore]);
 
-return (
+return ( 
         <div className="Main">
-            {loading ? <Loading/> : allPosts.map((post)=><Card {...post} key={post.id}/>)}
+            {list.map((post,index)=>{
+                if(list.length === index +1)
+                    return <Card {...post} innerRef={lastPostElementRef} key={post.questionId}/>
+                return <Card {...post} key={post.questionId}/>
+            }
+            )}
+            {loading && <Loading/> }
         </div>
 );
 }

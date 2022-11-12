@@ -7,7 +7,7 @@ import {actions} from '../../store';
 
 const apiURL = "http://localhost:5000/auth/";
 
-const Signup = () => {
+const EditProfile = () => {
   const [show, setShow] = useState(true);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -130,4 +130,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default EditProfile;

@@ -1,13 +1,16 @@
 import {configureStore,createSlice } from '@reduxjs/toolkit';
+
 const loginSlice = createSlice({
     name : 'login',
-    initialState : {isLogin : false},
+    initialState : localStorage.getItem('token') ? {isLogin:true,token:localStorage.getItem('token')}: {isLogin : false,token:""},
     reducers: {
         Login(state,action){
+          localStorage.setItem('token',action.payload.token);
           return {isLogin : true,token:action.payload.token};
         },
         Logout(state,action){
-          return {isLogin : false};
+          localStorage.removeItem('token');
+          return {isLogin : false,token:""};
         }
     }
 }) 
