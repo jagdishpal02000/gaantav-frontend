@@ -5,7 +5,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import axios from 'axios';
 
 
-const AnswerQuestion = ({ title, questionId }) => {
+const AnswerQuestion = ({ title, questionId,updateAnswers }) => {
   const {isLogin,token} = useSelector((state)=>state);
   const [show, setShow] = useState(true);
   const handleClose = () => setShow(false);
@@ -15,7 +15,7 @@ const AnswerQuestion = ({ title, questionId }) => {
   });
 
   const apiURL= 'http://localhost:5000/api/v1/';
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Make API Call to send the data.
     if (answerData.answerBody) {
       console.log(answerData);
@@ -27,8 +27,9 @@ const AnswerQuestion = ({ title, questionId }) => {
         answerBody:answerData.answerBody,
       };
        try {
-        axios.post(apiURL+'answer',formData,config);
-        setShow(false); 
+        await axios.post(apiURL+'answer',formData,config);
+        setShow(false);
+        updateAnswers(questionId); 
       } catch (error) {
         console.warn(error);
       }
