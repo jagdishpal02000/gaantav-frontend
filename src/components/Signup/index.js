@@ -19,8 +19,8 @@ const Signup = () => {
   const [error, setError] = useState({ error: false, message: "" });
 
   const dispatch = useDispatch();
-  const loginAction = (token) => {
-    dispatch(actions.Login({token}));
+  const loginAction = (token,email) => {
+    dispatch(actions.Login({token,email}));
   };
 
 
@@ -35,8 +35,7 @@ const Signup = () => {
       setError({ error: false, message: "" });
       try {
         const resp = await axios.post(apiURL + "signup", signupData);
-        console.log(resp.data.accessToken);
-        loginAction(resp.data.accessToken)
+        loginAction(resp.data.accessToken,resp.data.email)
         setShow(false);
       } catch (error) {
         if (error.response.status === 409) {

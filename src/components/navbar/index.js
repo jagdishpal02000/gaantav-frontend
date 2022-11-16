@@ -7,6 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import AskQuestion from '../AskQuestion'
 import Login from '../login';
 import Signup from '../Signup';
+import {Link} from 'react-router-dom';
 
 const Navbar = () =>{
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const Navbar = () =>{
   const [showLogin,setShowLogin]=useState(false);
   const [showSignup,setShowSignup]=useState(false); 
   const isLogin= useSelector((state)=>state.isLogin);
+  const userEmail= useSelector((state)=>state.email);
   const Logout = () => {
     dispatch(actions.Logout());
   };
@@ -30,12 +32,14 @@ const Navbar = () =>{
             <li className="nav-item">
               <a className="nav-link active wt m-2 link" aria-current="page" href="#">Home</a>
             </li>
-             {
+             { 
                isLogin ? 
             <li className="nav-item">
-              <a className="nav-link wt m-2 link" >
-                Profile
-              </a>
+              {/* <a  className="nav-link wt m-2 link" > */}
+                <Link to={`/profile/${userEmail}`}  className="nav-link wt m-2 link"target="_blank">
+                  Profile
+                </Link>
+              {/* </a> */}
             </li>
               :<>
             <li className="nav-item">

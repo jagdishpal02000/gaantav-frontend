@@ -16,15 +16,15 @@ const Login = () => {
   const [error, setError] = useState({ error: false, message: "" });
 
   const dispatch = useDispatch();
-  const loginAction = (token) => {
-    dispatch(actions.Login({token}));
+  const loginAction = (token,email) => {
+    dispatch(actions.Login({token,email}));
   };
   const handleSubmit = async () => {
     // Make API Call to send the data.;
    if(loginData.email.length && loginData.password.length){
     try {
       const resp = await axios.post(apiURL + "login", loginData);
-      loginAction(resp.data.accessToken);
+      loginAction(resp.data.accessToken,resp.data.email);
       setShow(false);
     } catch (error) {
       if (error.response.status === 404) {

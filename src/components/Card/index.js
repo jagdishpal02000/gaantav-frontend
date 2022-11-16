@@ -12,16 +12,16 @@ const Card = ({
   authorName,
   authorImage,
   tags,
-  upVotes,
-  downVotes,
+  repo,
   authorUsername,
   innerRef,
 }) => {
   const [showAnswerQuestion, setShowAnswerQuestion] = useState(false);
   const [answers,setAnswers] = useState([]);
   const {isLogin,token} = useSelector((state)=>state);
-  const [upVotesCount,setUpVotesCount] = useState(upVotes);
-  const [downVotesCount,setDownVotesCount] = useState(downVotes);
+  const [repoCount,setRepoCount]= useState(repo);
+  // const [upVotesCount,setUpVotesCount] = useState(upVotes);
+  // const [downVotesCount,setDownVotesCount] = useState(downVotes);
   const apiURL='http://localhost:5000/public/api/v1/';
   const privateApiURL='http://localhost:5000/api/v1/';
   const config = {
@@ -33,8 +33,10 @@ const Card = ({
         if(res.status === 200){
           // increment down value and decrease up value   
 
-          setUpVotesCount(res.data.upVote);
-          setDownVotesCount(res.data.downVote);
+          // setUpVotesCount(res.data.upVote);
+          // setDownVotesCount(res.data.downVote);
+          console.log(res.data);
+          setRepoCount(res.data.repo);
         }
       });
     }
@@ -42,8 +44,12 @@ const Card = ({
       axios.post(`${privateApiURL}upVote`,{questionId},config).then((res)=>{
         if(res.status === 200){
           // increment up value.      
-          setUpVotesCount(res.data.upVote);
-          setDownVotesCount(res.data.downVote);
+          // setUpVotesCount(res.data.upVote);
+          // setDownVotesCount(res.data.downVote);
+          console.log(res.data);
+
+          setRepoCount(res.data.repo);
+
             }
         });
   }
@@ -103,7 +109,7 @@ const Card = ({
             <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
           </svg>
         </li>
-          <li className="col">5</li>
+          <li className="col">{repoCount}</li>
         <li className="col">
           <svg
             xmlns="http://www.w3.org/2000/svg"
