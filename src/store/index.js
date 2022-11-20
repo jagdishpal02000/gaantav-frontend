@@ -2,7 +2,7 @@ import {configureStore,createSlice } from '@reduxjs/toolkit';
 
 const loginSlice = createSlice({
     name : 'login',
-    initialState : localStorage.getItem('gaantavToken') && localStorage.getItem('gaantavEmail') ? {isLogin:true,token:localStorage.getItem('gaantavToken'),email:localStorage.getItem('gaantaEmail')}: {isLogin : false,token:""},
+    initialState : localStorage.getItem('gaantavToken') && localStorage.getItem('gaantavEmail') ? {isLogin:true,token:localStorage.getItem('gaantavToken'),email:localStorage.getItem('gaantavEmail')}: {isLogin : false,token:""},
     reducers: {
         Login(state,action){
           localStorage.setItem('gaantavToken',action.payload.token);

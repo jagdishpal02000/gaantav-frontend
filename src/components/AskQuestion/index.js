@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import {useSelector,useDispatch} from 'react-redux';
 import {actions} from '../../store';
 import Button from "react-bootstrap/Button";
@@ -12,12 +12,14 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import Loader from '../../assets/loader.gif'
-
+import Suggestions from "./Suggestions";
+import Debounce from '../../tools/Debounce';
+import './index.css';
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview,FilePondPluginFileValidateType,FilePondPluginFileEncode,FilePondPluginImageResize);
 
 const apiURL= 'http://localhost:5000/api/v1/';
-
+const publiApiURL= 'http://localhost:5000/public/api/v1/';
 
 const AskQuestion = () => {
   const isLogin = useSelector((state)=>state.isLogin);
@@ -27,6 +29,8 @@ const AskQuestion = () => {
   const handleShow = () => setShow(true);
   const [files, setFiles] = useState([]);
   const [loading,setLoading] = useState(false);
+  const [suggestionTitles,setSuggestionTitles] = useState([]);
+  const [suggestionLoading,setSuggestionLoading]= useState(false);
   // const [error,setError] = useState({message:''});
 
   const [questionData,setQuestionData]=useState({
@@ -37,12 +41,30 @@ const AskQuestion = () => {
                                                 });
 
   useEffect(()=>{
-    console.log(files);
     if(files.length > 0){
         setQuestionData({...questionData,image:files[0].file});
-        console.log(questionData);
     }
   },[files]);
+
+
+
+  const searchQuestions = async (query)=>{
+      const resp = await axios.get(publiApiURL+`search-questions/`+query);
+      setSuggestionTitles(resp.data)
+      setSuggestionLoading(false);
+  }
+
+  const callSearchQuestions = Debounce(searchQuestions,300);
+  
+  useEffect(()=>{
+    if(questionData.title.length >= 3){
+      setSuggestionLoading(true);
+      callSearchQuestions(questionData.title);
+    } 
+    else if(questionData.title.length === 0 ) {
+      setSuggestionTitles([])
+    }
+  },[questionData.title]);
 
   const handleSubmit = async () => {
     // Make API Call to send the data.;
@@ -97,6 +119,10 @@ const AskQuestion = () => {
               value={questionData.title}
               onInput={(e)=>{setQuestionData((prev)=>{return {...prev,title: e.target.value}})}}
             />
+            {suggestionLoading && <div className="loader"></div>}
+            {
+              suggestionTitles.map((titleData,index)=><Suggestions key={index} titleData={titleData}/>)
+            }
             <textarea
               cols="30"
               name="summery"

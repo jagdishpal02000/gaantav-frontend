@@ -1,0 +1,16 @@
+.suggestion-box{
+    padding:10px;
+    border: 1px solid black;
+    cursor: pointer;
+    border-radius: 15px;
+}
+.suggestion-box:hover{
+background: #0d6efd;
+}
+.suggestion-title{
+    text-decoration: none !important;
+    color:black;
+}
+.suggestion-title:hover{
+    color:rgb(255, 255, 255) !important;
+}

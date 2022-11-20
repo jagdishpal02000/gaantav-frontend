@@ -4,6 +4,8 @@ import { useEffect,useState } from 'react';
 import axios from 'axios';
 import EditProfile from '../EditProfile';
 import Card from '../Card';
+import ProfileHeader from './ProfileHeader';
+
 const Profile = (param) => {
     // const { username } = useLoaderData();
     const { username } = useParams();
@@ -42,43 +44,17 @@ const Profile = (param) => {
 
    }, [username]); 
 
-    return (<>
-      { loading ? <h1> Loading.... </h1> : (notFound ? <h1>Sorry user not found 😔 </h1> : <>
-      {editProfile && <EditProfile/>}
-<div className="container">
-   <div className="row">
-      <div className="col-md-12">
-         <div id="content" className="content content-full-width">
-            <div className="profile">
-               <div className="profile-header">
-                  <div className="profile-header-cover"></div>
-                  <div className="profile-header-content">
-                     <div className="profile-header-img">
-                        <img src={profileData.profile_picture} width="100%" height="100%" alt=""/>
-                     </div>
-                     <div className="profile-header-info">
-                        <h4 className="m-t-10 m-b-5">{profileData.name}</h4>
-                        <p className="m-b-10">{profileData.tagline}</p>
-                       <a className="btn btn-sm btn-info mb-2" onClick={()=>{setEditProfile(!editProfile)}}>Edit Profile</a>
-                     </div>
-                  </div>
-                  <ul className="profile-header-tab nav nav-tabs">
-                     <li className="nav-item"><a  target="__blank" className="nav-link_">POSTS</a></li>
-                     {/* <li className="nav-item"><a href="https://www.bootdey.com/snippets/view/bs4-profile-about" target="__blank" className="nav-link_">ABOUT</a></li>
-                     <li className="nav-item"><a href="https://www.bootdey.com/snippets/view/profile-photos" target="__blank" className="nav-link_">PHOTOS</a></li>
-                     <li className="nav-item"><a href="https://www.bootdey.com/snippets/view/profile-videos" target="__blank" className="nav-link_">VIDEOS</a></li>
-                     <li className="nav-item"><a href="https://www.bootdey.com/snippets/view/bs4-profile-friend-list" target="__blank" className="nav-link_ active show">FRIENDS</a></li> */}
-                  </ul>
-               </div>
-            </div>
-            <section className='posts'>
-            {posts.map((post,index) => <Card {...post} key={post.questionId} />)}
-            </section>
-         </div>
-      </div>
-   </div>
-</div>
-</>)}</>
+    return (
+    <>
+      { loading ? <h1> Loading.... </h1> : (notFound ? <h1>Sorry user not found 😔 </h1> :
+      <>
+            <ProfileHeader profileData={profileData} setEditProfile={setEditProfile} />         
+      {editProfile ? <EditProfile/> :
+         <div className="container">
+               {posts.map((post,index) => <Card {...post} key={post.questionId} />)}
+         </div>}
+      </>)}
+   </>
     );
 }
 
