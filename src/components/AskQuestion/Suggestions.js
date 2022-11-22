@@ -9,7 +9,7 @@ const Suggestions = ({ titleData }) => {
             <a href={questionTitle} target="_blank" className="suggestion-title">
         <div className="suggestion-box">
           <h6>{titleData.title}</h6>
-           <p className="suggestion-description">{titleData.summery.slice(0,40)}.....</p>
+           <p className="suggestion-description"><div dangerouslySetInnerHTML={{__html: titleData.summery.slice(0,80) + '...'}} /></p>
         </div>
             </a>
     </>

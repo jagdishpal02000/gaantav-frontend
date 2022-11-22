@@ -16,6 +16,8 @@ import Suggestions from "./Suggestions";
 import Debounce from '../../tools/Debounce';
 import './index.css';
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import RichTextEditor from "../../tools/RichTextEditor";
+
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview,FilePondPluginFileValidateType,FilePondPluginFileEncode,FilePondPluginImageResize);
 
 const apiURL= 'http://localhost:5000/api/v1/';
@@ -31,6 +33,7 @@ const AskQuestion = () => {
   const [loading,setLoading] = useState(false);
   const [suggestionTitles,setSuggestionTitles] = useState([]);
   const [suggestionLoading,setSuggestionLoading]= useState(false);
+  const [content,setContent] = useState('');
   // const [error,setError] = useState({message:''});
 
   const [questionData,setQuestionData]=useState({
@@ -68,7 +71,7 @@ const AskQuestion = () => {
 
   const handleSubmit = async () => {
     // Make API Call to send the data.;
-    console.log('token :',token);
+    setQuestionData((prev)=>{return {...prev,summery: content}})
     if(questionData.title && questionData.summery && questionData.tags){
         console.log(questionData);
         const formData=new FormData();
@@ -123,7 +126,7 @@ const AskQuestion = () => {
             {
               suggestionTitles.map((titleData,index)=><Suggestions key={index} titleData={titleData}/>)
             }
-            <textarea
+            {/* <textarea
               cols="30"
               name="summery"
               rows="5"
@@ -131,8 +134,9 @@ const AskQuestion = () => {
               placeholder="Describe Your Problem"
               value={questionData.summery}
               onInput={(e)=>{setQuestionData((prev)=>{return {...prev,summery: e.target.value}})}}
-            ></textarea>
+            ></textarea> */}
             
+          <RichTextEditor setContent={setContent} />
             {/* <input type="file" name="image" className="form-control" /> */}
             <FilePond
                 files={files}
@@ -151,7 +155,6 @@ const AskQuestion = () => {
                 accept="image/png, image/jpeg, image/gif"
                 labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
       />
-    
             <input
               type="text"
               name="tags"

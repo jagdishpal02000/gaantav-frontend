@@ -72,7 +72,8 @@ const Card = ({
         <Link to={`/${parsedTitle}`} target="_blank">
           <h5 className="card-title">{title}</h5>
         </Link>
-        <p className="card-text">{summery}</p>
+        <p className="card-text">
+        <div dangerouslySetInnerHTML={{__html: summery}} /></p>
       </div>
       {image && (
         <img src={image} className="card-img-top card-img" />
